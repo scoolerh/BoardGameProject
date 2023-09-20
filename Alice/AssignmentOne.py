@@ -7,9 +7,13 @@ app = flask.Flask(__name__)
 boards = {}
 gameId = 0
 
+@app.route("/")
+def test():
+    return newGameHelp()
+
 @app.route("/newgame")
 def newGameHelp() -> str:
-    return "Usage: http://localhost:5001/newgame/player, where player is x or o"
+    return "Usage: http://localhost:5000/newgame/player, where player is x or o"
 
 @app.route("/newgame/<player>")
 def newgame(player: str) -> str:
@@ -29,7 +33,7 @@ def newgame(player: str) -> str:
 
 @app.route("/nextmove/")
 def nextmoveHelp():
-    return "Usage: http://localhost:5001/nextmove/gameID/row/col, where:<br>-gameID is a previously created game<br>-row and column are a legal move space"
+    return "Usage: http://localhost:5000/nextmove/gameID/row/col, where:<br>-gameID is a previously created game<br>-row and column are a legal move space"
 
 def getSquare(gameId: int, row: int, column: int) -> str:
     return boards[gameId][row * 19 + column + 2]
@@ -196,4 +200,4 @@ def nextmove(gameId: int, row: int, column: int) -> str:
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

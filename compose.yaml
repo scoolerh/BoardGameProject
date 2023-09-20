@@ -2,4 +2,8 @@ services:
   alice:
     build: ./Alice
     ports:
-      - "7555:5001"
+      - "7555:5000"
+  evaluation:
+    build: ./Evaluation
+    ports:
+      - "8095:5000"
