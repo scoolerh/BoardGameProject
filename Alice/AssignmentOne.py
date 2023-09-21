@@ -8,15 +8,18 @@ boards = {}
 gameId = 0
 
 @app.route("/")
-def test():
+def homepage():
+    """Landing page of website. Shows user how to play game."""
     return newGameHelp()
 
 @app.route("/newgame")
 def newGameHelp() -> str:
-    return "Usage: http://localhost:5000/newgame/player, where player is x or o"
+    """Returns instructions to play the game"""
+    return "Usage: http://localhost:7555/newgame/player, where player is x or o"
 
 @app.route("/newgame/<player>")
 def newgame(player: str) -> str:
+    """Takes input, player, which is either x or o and initializes game with that property"""
     player = player.lower()
     if player not in ['x', 'o']:
         return newGameHelp()
@@ -60,12 +63,8 @@ def changeTurn(gameId: int) -> None:
         boards[gameId] = 'x' + boards[gameId][1:]
 
 def checkPattern(gameId: int, start: tuple[int, int], direction: tuple[int, int], pattern: list) -> bool:
-    # key:
-    # x and o: player characters
-    # *: wildcard
-    # |: border
-    # -: empty
-    # _: empty but the place to move in (center of the pattern)
+    """start represents the starting position and direction represents which way this algorithm will scan.
+    It searches for the pattern found in the pattern parameter."""
     r, c = start
     dr, dc = direction
     l = len(pattern)
@@ -109,7 +108,8 @@ def doCaptures(gameId: int, row: int, col: int, player: str) -> None:
     opponent = 'o' if player == 'x' else 'x'
     for i in range(-1, 2):
         for j in range(-1, 2):
-            if i == 0 and j == 0: continue
+            if i == 0 and j == 0:
+                continue
             checkCapture(gameId, row, col, (i, j), player, opponent)  
     if getCaptures(gameId, player) >= 5:
         displayWin(gameId, player)
