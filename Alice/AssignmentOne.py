@@ -19,7 +19,7 @@ def evaluator():
     newgame("o")
     while(True):
         Alice.makeMove(gameId - 1)
-        print(boards[gameId-1])
+        #print(boards[gameId-1])
 
 @app.route("/newgame")
 def newGameHelp() -> str:
@@ -94,10 +94,11 @@ def checkPattern(gameId: int, start: tuple[int, int], direction: tuple[int, int]
         
 
 def getCaptures(gameId: int, player: str) -> int:
+    caps = boards[gameId].split('#')
     if player == 'x':
-        return int(boards[gameId][-3])
+        return int(caps[2])
     else:
-        return int(boards[gameId][-1])
+        return int(caps[3])
     
 def recordCapture(gameId: int, player: str) -> None:
     if player == 'x':
@@ -143,6 +144,7 @@ def getFormattedBoard(gameId: int) -> str:
     return "<br>".join(lines)
 
 def displayWin(gameId: int, player: str):
+    boards[gameId] = boards[gameId].append('c')
     return "hello"
 
 def checkForFiveInARow(gameId: int, row: int, col: int, player: str) -> None:
@@ -166,4 +168,4 @@ def nextmove(gameId: int, row: int, column: int) -> str:
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=8095, debug=True)
