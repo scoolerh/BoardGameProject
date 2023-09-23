@@ -3,6 +3,7 @@ import flask
 import json
 import random
 import Alice
+import Baab
 
 app = flask.Flask(__name__)
 
@@ -14,7 +15,7 @@ def homepage():
     """Landing page of website. Shows user how to play game."""
     return newGameHelp()
 
-@app.route("/evaluatoraccess/")
+@app.route("/alice/")
 def evaluator():
     newgame("x")
     row = random.randint(0,18)
@@ -28,6 +29,27 @@ def evaluator():
         alicemove = Alice.makeMove(gameId-1)
         doMove(gameId-1, alicemove[0], alicemove[1])
     return 'x' if boards[gameId-1][0] == 'o' else 'o'
+
+@app.route("/alicevbaab/")
+def evaluateBaab():
+    newgame("x")
+    whoIsX = random.randint(0,1)
+    x = None
+    xIs = "Alice"
+    if (whoIsX == 0):
+        x = Alice.makeMove
+        o = Baab.makeMove
+    else:
+        x = Baab.makeMove
+        o = Alice.makeMove
+        xIs = "Baab"
+    while(boards[gameId-1][-1] != 'c'):
+        xmove = x(gameId-1)
+        doMove(gameId-1, xmove[0], xmove[1])
+        if(boards[gameId-1][-1] != 'c'):
+            omove = o(gameId-1)
+            doMove(gameId-1, omove[0], omove[1])
+    return xIs if boards[gameId-1][0] == 'o' else ("Alice" if xIs == "Baab" else "Baab")
 
 @app.route("/newgame")
 def newGameHelp() -> str:

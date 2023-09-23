@@ -8,10 +8,10 @@ def findGoodMoves(gameId: int) -> list[tuple[int, int]]:
 
     # move patterns in order of how good they are
     patterns = [['-', p, p, p, p], # make five in a row
-                ['-', o, o, o, o], # block five in a row
+                #['-', o, o, o, o], # block five in a row
                 ['-', p, p, p], # make four in a row
                 #[o, o, '_', o], # block four in a row
-                ['-', o, o, o, '*'], # block four in a row away from the edge
+                #['-', o, o, o, '*'], # block four in a row away from the edge
                 ['-', o, o, p], # make a capture
                 ['-', p, p, '*'], # threaten a capture away from the edge
                 ['-', p, '-'], # make two in a row with space
