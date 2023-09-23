@@ -17,6 +17,7 @@ def evaluator():
     newgame("o")
     while(True):
         doComputerMove(gameId - 1)
+        print(boards[gameId-1])
 
 @app.route("/newgame")
 def newGameHelp() -> str:
@@ -91,12 +92,13 @@ def checkPattern(gameId: int, start: tuple[int, int], direction: tuple[int, int]
 
 def getCaptures(gameId: int, player: str) -> int:
     if player == 'x':
-        return int(boards[gameId][2 + 19 * 19 + 1])
+        return int(boards[gameId][-3])
     else:
-        return int(boards[gameId][2 + 19 * 19 + 3])
+        return int(boards[gameId][-1])
     
 def recordCapture(gameId: int, player: str) -> None:
     if player == 'x':
+        
         newScore = str(int(boards[gameId][-3]) + 1)
         boards[gameId] = boards[gameId][:-3] + newScore + boards[gameId][-2:]
     else:
@@ -184,7 +186,7 @@ def getFormattedBoard(gameId: int) -> str:
     return "<br>".join(lines)
 
 def displayWin(gameId: int, player: str):
-    raise NotImplementedError
+    return "hello"
 
 def checkForFiveInARow(gameId: int, row: int, col: int, player: str) -> None:
     for i in range(-1, 2):
