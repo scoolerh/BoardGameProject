@@ -1,5 +1,9 @@
 # Assignment Two : Fun with the Board Game Pente 
 
+## Info
+
+Run on port 8095 to evaluate. 
+
 ## Collaborators
 
 Bryce Bernstein, Emilie Morocco, Hannah Scooler
