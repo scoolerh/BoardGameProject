@@ -18,8 +18,9 @@ def homepage():
 def evaluator():
     newgame("o")
     while(True):
-        Alice.makeMove(gameId - 1)
-        #print(boards[gameId-1])
+        alicemove = Alice.makeMove(0)
+        doMove(0, alicemove[0], alicemove[1])
+        print(boards[gameId-1])
 
 @app.route("/newgame")
 def newGameHelp() -> str:
@@ -101,13 +102,13 @@ def getCaptures(gameId: int, player: str) -> int:
         return int(caps[3])
     
 def recordCapture(gameId: int, player: str) -> None:
+    gameState = boards[gameId].split("#")
     if player == 'x':
-        
-        newScore = str(int(boards[gameId][-3]) + 1)
-        boards[gameId] = boards[gameId][:-3] + newScore + boards[gameId][-2:]
+        gameState[2] = str(int(gameState[2]) + 1)
+        boards[gameId] = "#".join(gameState)
     else:
-        newScore = str(int(boards[gameId][-1]) + 1)
-        boards[gameId] = boards[gameId][:-1] + newScore
+        gameState[3] = str(int(gameState[2]) + 1)
+        boards[gameId] = "#".join(gameState)
 
 def checkCapture(gameId: int, row: int, col: int, direction: tuple[int, int], player: str, opponent: str) -> None:
     if checkPattern(gameId, (row, col), direction, [player, opponent, opponent, player]):
