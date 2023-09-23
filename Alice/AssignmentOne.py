@@ -16,11 +16,18 @@ def homepage():
 
 @app.route("/evaluatoraccess/")
 def evaluator():
-    newgame("o")
-    while(True):
-        alicemove = Alice.makeMove(0)
-        doMove(0, alicemove[0], alicemove[1])
-        print(boards[gameId-1])
+    newgame("x")
+    row = random.randint(0,18)
+    column = random.randint(0,18)
+    setSquare(gameId-1,row,column,'x')
+    while(getSquare(gameId-1, row, column) == 'x'):
+        row = random.randint(0,18)
+        column = random.randint(0,18)
+    setSquare(gameId-1,row,column,'o')
+    while(boards[gameId-1][-1] != 'c'):
+        alicemove = Alice.makeMove(gameId-1)
+        doMove(gameId-1, alicemove[0], alicemove[1])
+    return 'x' if boards[gameId-1][0] == 'o' else 'o'
 
 @app.route("/newgame")
 def newGameHelp() -> str:
@@ -145,7 +152,7 @@ def getFormattedBoard(gameId: int) -> str:
     return "<br>".join(lines)
 
 def displayWin(gameId: int, player: str):
-    boards[gameId] = boards[gameId].append('c')
+    boards[gameId] = boards[gameId] + 'c'
     return "hello"
 
 def checkForFiveInARow(gameId: int, row: int, col: int, player: str) -> None:
