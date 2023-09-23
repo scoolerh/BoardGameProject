@@ -2,6 +2,8 @@
 import flask
 import json
 import random
+import Alice
+
 app = flask.Flask(__name__)
 
 boards = {}
@@ -16,7 +18,7 @@ def homepage():
 def evaluator():
     newgame("o")
     while(True):
-        doComputerMove(gameId - 1)
+        Alice.makeMove(gameId - 1)
         print(boards[gameId-1])
 
 @app.route("/newgame")
@@ -35,7 +37,8 @@ def newgame(player: str) -> str:
     newBoard = '-' * 19 * 19
     boards[gameId] = f"x#{newBoard}#0#0"
     if player == 'o':
-        doComputerMove(gameId)
+        computerMove = Alice.makeMove(gameId)
+        doMove(gameId, computerMove[0], computerMove[1])
     output = {'ID': gameId, 'state': boards[gameId]}
     gameId += 1
 
@@ -131,52 +134,6 @@ def doMove(gameId: int, row: int, col: int) -> None:
     checkForFiveInARow(gameId, row, col, turn)
     changeTurn(gameId)
 
-def searchForPattern(gameId: int, pattern: list[str]) -> list[tuple[int, int]]:
-    if "_" in pattern:
-        moveIdx = pattern.index("_")
-        pattern[moveIdx] = "-"
-    else:
-        moveIdx = 0
-    captures = []
-    for r in range(19):
-        for c in range(19):
-            for dr in range(-1, 2):
-                for dc in range(-1, 2):
-                    if dr == 0 and dc == 0:
-                        continue
-                    if checkPattern(gameId, (r, c), (dr, dc), pattern):
-                        captures.append((r + dr*moveIdx, c+dc*moveIdx))
-    return captures
-
-def findGoodMoves(gameId: int) -> list[tuple[int, int]]:
-    p = getTurn(gameId)
-    o = "x" if p == "o" else "o"
-
-    # move patterns in order of how good they are
-    patterns = [['-', p, p, p, p], # make five in a row
-                    ['-', o, o, o, o], # block five in a row
-                    ['-', p, p, p], # make four in a row
-                    [o, o, '_', o], # block four in a row
-                    ['-', o, o, o, '*'], # block four in a row away from the edge
-                    ['-', o, o, p], # make a capture
-                    ['-', p, p, '*'], # threaten a capture away from the edge
-                    ['-', p, '-'], # make two in a row with space
-                    ['-', o, '*'], # get in the way, away from the edge
-                    ['-']] # any legal move
-    
-    for pattern in patterns:
-        moves = searchForPattern(gameId, pattern)
-        if len(moves) > 0:
-            return moves
-    
-    raise NotImplementedError
-    
-    
-
-def doComputerMove(gameId: int) -> None:
-    moveChoices = findGoodMoves(gameId)
-    move = moveChoices[random.randint(0, len(moveChoices)-1)]
-    doMove(gameId, move[0], move[1])
 
 def getFormattedBoard(gameId: int) -> str:
     squares = boards[gameId][2:-4].replace("-", "_")
@@ -203,7 +160,8 @@ def nextmove(gameId: int, row: int, column: int) -> str:
     if gameId not in boards or row < 0 or row >= 19 or column < 0 or column >= 19 or getSquare(gameId, row, column) != "-":
         return nextmoveHelp()
     doMove(gameId, row, column)
-    doComputerMove(gameId)
+    computerMove = Alice.makeMove(gameId)
+    doMove(gameId, computerMove[0], computerMove[1])
     return json.dumps({'ID': gameId, 'row': row, 'column': column, 'state': boards[gameId]}) + "<br>" + getFormattedBoard(gameId)
 
 
