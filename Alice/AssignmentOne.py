@@ -12,6 +12,12 @@ def homepage():
     """Landing page of website. Shows user how to play game."""
     return newGameHelp()
 
+@app.route("/evaluatoraccess/")
+def evaluator():
+    newgame("o")
+    while(True):
+        doComputerMove(gameId - 1)
+
 @app.route("/newgame")
 def newGameHelp() -> str:
     """Returns instructions to play the game"""

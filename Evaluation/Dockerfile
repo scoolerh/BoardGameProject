@@ -5,6 +5,7 @@ WORKDIR /code
 COPY . .
 
 RUN pip install flask
+RUN pip install requests
 
 ENV FLASK_APP=evaluator.py
 ENV FLASK_RUN_HOST=0.0.0.0
