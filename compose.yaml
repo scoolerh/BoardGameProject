@@ -1,6 +1,6 @@
 services:
-  alice:
-    build: ./Alice
+  game:
+    build: ./Game
     ports:
       - "7555:5000"
   evaluation:
@@ -8,4 +8,4 @@ services:
     ports:
       - "8095:5000"
     links:
-      - "alice"
+      - "game"
